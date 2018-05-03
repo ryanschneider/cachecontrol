@@ -248,7 +248,12 @@ func UsingRequestResponse(req *http.Request,
 	var reqMethod string
 
 	var reqDir *RequestCacheDirectives = nil
-	respDir, err := ParseResponseCacheControl(respHeaders.Get("Cache-Control"))
+	ctrlHeader := "Cache-Control"
+	if respHeaders.Get("Surrogate-Control") != "" {
+		ctrlHeader = "Surrogate-Control"
+	}
+
+	respDir, err := ParseResponseCacheControl(respHeaders.Get(ctrlHeader))
 	if err != nil {
 		return nil, time.Time{}, err
 	}
